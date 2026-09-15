@@ -1264,8 +1264,8 @@ RareCandy_StatBooster_GetParameters:
 	ld [wCurPartyLevel], a
 	call GetBaseData
 	ld a, [wCurPartyMon]
-	ld hl, wPartyMonNicknames
-	call GetNickname
+	ld c, a
+	farcall GetPartyMonDisplayName
 	ret
 
 RareCandyEffect:

@@ -40,7 +40,11 @@ DayCareMan:
 
 .AskWithdrawMon:
 	farcall GetBreedMon1LevelGrowth
-	ld hl, wBreedMon1Nickname
+	ld a, [wBreedMon1Species]
+	ld b, a
+	ld de, wBreedMon1Nickname
+	farcall GetMonDisplayName
+	ld hl, wStringBuffer1
 	call GetPriceToRetrieveBreedmon
 	call DayCare_AskWithdrawBreedMon
 	jr c, .print_text
@@ -78,7 +82,11 @@ DayCareLady:
 
 .AskWithdrawMon:
 	farcall GetBreedMon2LevelGrowth
-	ld hl, wBreedMon2Nickname
+	ld a, [wBreedMon2Species]
+	ld b, a
+	ld de, wBreedMon2Nickname
+	farcall GetMonDisplayName
+	ld hl, wStringBuffer1
 	call GetPriceToRetrieveBreedmon
 	call DayCare_AskWithdrawBreedMon
 	jr c, .print_text
@@ -129,9 +137,9 @@ DayCareAskDepositPokemon:
 	ld d, [hl]
 	farcall ItemIsMail
 	jr c, .HoldingMail
-	ld hl, wPartyMonNicknames
 	ld a, [wCurPartyMon]
-	call GetNickname
+	ld c, a
+	farcall GetPartyMonDisplayName
 	and a
 	ret
 

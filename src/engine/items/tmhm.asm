@@ -126,8 +126,8 @@ TeachTMHM:
 
 	push bc
 	ld a, [wCurPartyMon]
-	ld hl, wPartyMonNicknames
-	call GetNickname
+	ld c, a
+	farcall GetPartyMonDisplayName
 	pop bc
 
 	ld a, c

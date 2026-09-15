@@ -55,7 +55,7 @@ TryAddMonToParty:
 	jr nz, .skipnickname
 	ld a, [wCurPartySpecies]
 	ld [wNamedObjectIndex], a
-	call GetPokemonName
+	call GetPokemonNameForStorage
 	ld hl, wPartyMonNicknames
 	ldh a, [hMoveMon]
 	dec a
@@ -974,7 +974,7 @@ SendMonIntoBox:
 
 	ld a, [wCurPartySpecies]
 	ld [wNamedObjectIndex], a
-	call GetPokemonName
+	call GetPokemonNameForStorage
 
 	ld de, sBoxMonNicknames
 	ld hl, wStringBuffer1
@@ -1753,7 +1753,18 @@ GivePoke::
 .wildmon
 	callfar GiveANickname_YesNo
 	pop de
-	jr c, .skip_nickname
+	jr nc, .custom_nickname
+	; The prompt used the display name. If it was declined, restore the
+	; canonical stored default before this branch possibly writes to a Box.
+	ld a, [wCurPartySpecies]
+	ld [wNamedObjectIndex], a
+	call GetPokemonNameForStorage
+	ld hl, wStringBuffer1
+	ld de, wMonOrItemNameBuffer
+	ld bc, MON_NAME_LENGTH
+	call CopyBytes
+	jr .skip_nickname
+.custom_nickname
 	call InitNickname
 
 .skip_nickname

@@ -1097,6 +1097,9 @@ Printer_PrintBoxListSegment:
 	ld a, "/"
 	ld [hli], a
 	push hl
+	ld a, [wCurPartySpecies]
+	ld b, a
+	push bc
 	ld a, [wAddrOfBoxToPrint]
 	ld l, a
 	ld a, [wAddrOfBoxToPrint + 1]
@@ -1109,12 +1112,13 @@ Printer_PrintBoxListSegment:
 	; ld a, [hl]
 	; ld e, l
 	; ld d, h
-	ld de, wStringBuffer5
-	ld bc, 11
-	call CopyBytes
+	pop bc
+	ld d, h
+	ld e, l
+	farcall GetMonDisplayName
 .printNickName
 	pop hl
-	ld de, wStringBuffer5
+	ld de, wStringBuffer1
 
 	; call PrintLevel_Force3Digits
 	call PlaceString
@@ -1289,4 +1293,3 @@ LoadPrinterFont:
 .loadFont
 	lb bc, BANK(PrinterFont), 20
 	jp Get1bpp
-

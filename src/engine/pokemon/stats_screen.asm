@@ -291,8 +291,12 @@ StatsScreen_InitLeftHalf:
 	cp BOXMON
 	ld a, BANK(sBoxMonNicknames)
 	call z, OpenSRAM
+	ld a, [wBaseDexNo]
+	ld b, a
 	ld d, h
 	ld e, l
+	farcall GetMonDisplayName
+	ld de, wStringBuffer1
 
 	lb bc, 15, 0 ; CHS_Fix TO DO
 	; farcall FixStrLength

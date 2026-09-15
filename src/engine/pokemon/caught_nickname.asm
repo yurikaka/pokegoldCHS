@@ -39,11 +39,12 @@ CheckPartyFullAfterContest:
 	call CopyBytes
 	ld a, [wCurPartySpecies]
 	ld [wNamedObjectIndex], a
-	call GetPokemonName
+	call GetPokemonNameForStorage
 	ld hl, wStringBuffer1
 	ld de, wMonOrItemNameBuffer
 	ld bc, MON_NAME_LENGTH
 	call CopyBytes
+	call GetPokemonName
 	call GiveANickname_YesNo
 	jr c, .Party_SkipNickname
 	ld a, [wPartyCount]
@@ -90,9 +91,14 @@ CheckPartyFullAfterContest:
 	callfar InsertPokemonIntoBox
 	ld a, [wCurPartySpecies]
 	ld [wNamedObjectIndex], a
+	call GetPokemonNameForStorage
+	ld hl, wStringBuffer1
+	ld de, wMonOrItemNameBuffer
+	ld bc, MON_NAME_LENGTH
+	call CopyBytes
 	call GetPokemonName
 	call GiveANickname_YesNo
-	ld hl, wStringBuffer1
+	ld hl, wMonOrItemNameBuffer
 	jr c, .Box_SkipNickname
 	ld a, BOXMON
 	ld [wMonType], a

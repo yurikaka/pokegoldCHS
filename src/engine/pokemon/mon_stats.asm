@@ -346,9 +346,9 @@ ListMovePP:
 Unused_PlaceEnemyHPLevel:
 	push hl
 	push hl
-	ld hl, wPartyMonNicknames
 	ld a, [wCurPartyMon]
-	call GetNickname
+	ld c, a
+	farcall GetPartyMonDisplayName
 	lb bc, 18, 0
 	farcall FixStrLength
 	pop hl

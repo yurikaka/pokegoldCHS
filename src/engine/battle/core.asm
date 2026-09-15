@@ -3686,9 +3686,17 @@ InitBattleMon:
 	ld [wBattleMonType1], a
 	ld a, [wBaseType2]
 	ld [wBattleMonType2], a
+	ld a, [wBattleMonSpecies]
+	ld b, a
+	push bc
 	ld hl, wPartyMonNicknames
 	ld a, [wCurBattleMon]
 	call SkipNames
+	pop bc
+	ld d, h
+	ld e, l
+	farcall GetMonDisplayName
+	ld hl, wStringBuffer1
 	ld de, wBattleMonNickname
 	ld bc, MON_NAME_LENGTH
 	call CopyBytes
@@ -3766,9 +3774,17 @@ InitEnemyMon:
 	ld a, [wEnemyMonSpecies]
 	ld [wCurSpecies], a
 	call GetBaseData
+	ld a, [wEnemyMonSpecies]
+	ld b, a
+	push bc
 	ld hl, wOTPartyMonNicknames
 	ld a, [wCurPartyMon]
 	call SkipNames
+	pop bc
+	ld d, h
+	ld e, l
+	farcall GetMonDisplayName
+	ld hl, wStringBuffer1
 	ld de, wEnemyMonNickname
 	ld bc, MON_NAME_LENGTH
 	call CopyBytes
@@ -7124,8 +7140,8 @@ GiveExperiencePoints:
 	ldh a, [hQuotient + 2]
 	ld [wStringBuffer2], a
 	ld a, [wCurPartyMon]
-	ld hl, wPartyMonNicknames
-	call GetNickname
+	ld c, a
+	farcall GetPartyMonDisplayName
 	ld hl, Text_MonGainedExpPoint
 	call PrintText
 	ld a, [wStringBuffer2 + 1]
@@ -9139,4 +9155,3 @@ ENDC
 ; 	pop hl
 ; 	pop af
 ; 	ret
-

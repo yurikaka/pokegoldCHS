@@ -250,6 +250,11 @@ HatchEggs:
 	ld [de], a
 	ld [wNamedObjectIndex], a
 	ld [wCurSpecies], a
+	call GetPokemonNameForStorage
+	ld hl, wStringBuffer1
+	ld de, wMonOrItemNameBuffer
+	ld bc, MON_NAME_LENGTH
+	call CopyBytes
 	call GetPokemonName
 	xor a
 	ld [wUnusedEggHatchFlag], a
@@ -336,7 +341,7 @@ HatchEggs:
 	jr .next
 
 .nonickname
-	ld hl, wStringBuffer1
+	ld hl, wMonOrItemNameBuffer
 	ld bc, MON_NAME_LENGTH
 	call CopyBytes
 
@@ -855,7 +860,11 @@ DayCareMon1:
 	bit DAYCARELADY_HAS_MON_F, a
 	jr z, DayCareMonCursor
 	call PromptButton
-	ld hl, wBreedMon2Nickname
+	ld a, [wBreedMon2Species]
+	ld b, a
+	ld de, wBreedMon2Nickname
+	farcall GetMonDisplayName
+	ld hl, wStringBuffer1
 	call DayCareMonCompatibilityText
 	jp PrintText
 
@@ -868,7 +877,11 @@ DayCareMon2:
 	bit DAYCAREMAN_HAS_MON_F, a
 	jr z, DayCareMonCursor
 	call PromptButton
-	ld hl, wBreedMon1Nickname
+	ld a, [wBreedMon1Species]
+	ld b, a
+	ld de, wBreedMon1Nickname
+	farcall GetMonDisplayName
+	ld hl, wStringBuffer1
 	call DayCareMonCompatibilityText
 	jp PrintText
 

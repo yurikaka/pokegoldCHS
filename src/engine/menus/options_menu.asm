@@ -112,7 +112,12 @@ DisplayCHSENGLabel:
 	ld a, [wEngPKMNNameMark]
 	cp 1
 	ld de, .CHSText
+	jr z, .ENG
+	cp 2
 	jr nz, .CHS
+	ld de, .MixedText
+	jr .CHS
+.ENG
 	ld de, .ENGText
 .CHS
 	call PlaceStringDirect
@@ -126,6 +131,9 @@ DisplayCHSENGLabel:
 	db $00,$01,$02,$01,$03,$04,$6f,$05,$07,-1
 .ENGText
 	db $00,$01,$02,$01,$03,$04,$6f,$06,$07,-1
+.MixedText
+	; "中英文": Chinese display, English stored default names.
+	db $00,$01,$02,$01,$03,$04,$6f,$05,$06,$07,-1
 .PKMN
 	db $08,$09,$0A,-1
 
@@ -565,8 +573,11 @@ OptionsControl:
 	ret
 .SelectPressed
 	ld a, [wEngPKMNNameMark]
-	and 1
-	xor 1
+	inc a
+	cp 3
+	jr c, .store_name_mode
+	xor a
+.store_name_mode
 	ld [wEngPKMNNameMark], a
 	call DisplayCHSENGLabel
 	ret

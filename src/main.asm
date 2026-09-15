@@ -557,6 +557,10 @@ INCBIN "dfs/ChineseFonts_2E_L.bin"
 DFS_C_2E_H::
 INCBIN "dfs/ChineseFonts_2E_H.bin"
 
+SECTION "Mode 2 Pokemon name display", ROMX
+
+INCLUDE "engine/pokemon/names.asm"
+
 SECTION "Stadium 2 Checksums", ROMX[$7DF8], BANK[$7F]
 
 ; The end of the ROM is taken up by checksums of the content, apparently used

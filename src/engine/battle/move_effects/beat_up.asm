@@ -26,8 +26,8 @@ BattleCommand_BeatUp:
 .got_mon
 ; BUG: Beat Up can desynchronize link battles (see docs/bugs_and_glitches.md)
 	ld a, [wCurBeatUpPartyMon]
-	ld hl, wPartyMonNicknames
-	call GetNickname
+	ld c, a
+	farcall GetPartyMonDisplayName
 	ld a, MON_HP
 	call GetBeatupMonLocation
 	ld a, [hli]
@@ -117,11 +117,19 @@ BattleCommand_BeatUp:
 
 .linked
 	ld a, [wCurBeatUpPartyMon]
+	ld c, a
+	ld b, 0
+	ld hl, wOTPartySpecies
+	add hl, bc
+	ld b, [hl]
+	push bc
 	ld hl, wOTPartyMonNicknames
 	ld bc, NAME_LENGTH
 	call AddNTimes
-	ld de, wStringBuffer1
-	call CopyBytes
+	pop bc
+	ld d, h
+	ld e, l
+	farcall GetMonDisplayName
 
 .got_enemy_nick
 	ld a, MON_HP

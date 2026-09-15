@@ -1406,17 +1406,20 @@ BillsPC_RefreshTextboxes:
 	ld a, e
 	call AddNTimes
 	ld a, [hl]
+	ld b, a
 	pop hl
 	and a
 	jr z, .boxfail
+	push bc
 	ld bc, sBoxMonNicknames - sBox
 	add hl, bc
 	ld bc, MON_NAME_LENGTH
 	ld a, e
 	call AddNTimes
-	ld de, wStringBuffer1
-	ld bc, MON_NAME_LENGTH
-	call CopyBytes
+	pop bc
+	ld d, h
+	ld e, l
+	farcall GetMonDisplayName
 	call CloseSRAM
 	pop hl
 	ld de, wStringBuffer1
@@ -1434,15 +1437,18 @@ BillsPC_RefreshTextboxes:
 	ld d, $0
 	add hl, de
 	ld a, [hl]
+	ld b, a
 	and a
 	jr z, .partyfail
+	push bc
 	ld hl, wPartyMonNicknames
 	ld bc, MON_NAME_LENGTH
 	ld a, e
 	call AddNTimes
-	ld de, wStringBuffer1
-	ld bc, MON_NAME_LENGTH
-	call CopyBytes
+	pop bc
+	ld d, h
+	ld e, l
+	farcall GetMonDisplayName
 	pop hl
 	ld de, wStringBuffer1
 	call PlaceString
@@ -1460,15 +1466,18 @@ BillsPC_RefreshTextboxes:
 	ld d, $0
 	add hl, de
 	ld a, [hl]
+	ld b, a
 	and a
 	jr z, .sBoxFail
+	push bc
 	ld hl, sBoxMonNicknames
 	ld bc, MON_NAME_LENGTH
 	ld a, e
 	call AddNTimes
-	ld de, wStringBuffer1
-	ld bc, MON_NAME_LENGTH
-	call CopyBytes
+	pop bc
+	ld d, h
+	ld e, l
+	farcall GetMonDisplayName
 	call CloseSRAM
 	pop hl
 	ld de, wStringBuffer1
@@ -1915,9 +1924,9 @@ DepositPokemon:
 	ld hl, wBillsPC_ScrollPosition
 	add [hl]
 	ld [wCurPartyMon], a
-	ld hl, wPartyMonNicknames
 	ld a, [wCurPartyMon]
-	call GetNickname
+	ld c, a
+	farcall GetPartyMonDisplayName
 	ld a, PC_DEPOSIT
 	ld [wPokemonWithdrawDepositParameter], a
 	predef SendGetMonIntoFromBox
@@ -1976,8 +1985,19 @@ TryWithdrawPokemon:
 	ld a, BANK(sBoxMonNicknames)
 	call OpenSRAM
 	ld a, [wCurPartyMon]
+	ld c, a
+	ld b, 0
+	ld hl, sBoxSpecies
+	add hl, bc
+	ld b, [hl]
+	push bc
 	ld hl, sBoxMonNicknames
-	call GetNickname
+	ld a, c
+	call SkipNames
+	pop bc
+	ld d, h
+	ld e, l
+	farcall GetMonDisplayName
 	call CloseSRAM
 	xor a
 	ld [wPokemonWithdrawDepositParameter], a

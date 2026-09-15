@@ -485,6 +485,10 @@ SaveBackupOptions:
 	ld de, sBackupOptions
 	ld bc, wOptionsEnd - wOptions
 	call CopyBytes
+	ld a, [wEngPKMNNameMark]
+	ld [sBackupENGMark], a
+	ld a, $e2
+	ld [sBackupENGMarkMagic], a
 	call CloseSRAM
 	ret
 
@@ -625,10 +629,9 @@ TryLoadSaveData:
 	call OpenSRAM
 
 	ld a, [sENGMark]
-	cp 1
-	ld a, 0
-	jr nz, .CHS
-	ld a, 1
+	cp 3
+	jr c, .CHS
+	xor a
 .CHS
 	ld [wEngPKMNNameMark], a
 
@@ -651,6 +654,22 @@ TryLoadSaveData:
 	ld de, wStartDay
 	ld bc, 14
 	call CopyBytes
+	call CloseSRAM
+
+	ld a, BANK(sBackupENGMark)
+	call OpenSRAM
+	; Old backups have no marker: reject them deterministically rather than
+	; treating an unrelated free SRAM byte as a valid mode.
+	ld a, [sBackupENGMarkMagic]
+	cp $e2
+	jr nz, .backup_name_mode_invalid
+	ld a, [sBackupENGMark]
+	cp 3
+	jr c, .backup_name_mode_valid
+.backup_name_mode_invalid
+	xor a
+.backup_name_mode_valid
+	ld [wEngPKMNNameMark], a
 	call CloseSRAM
 	ret
 

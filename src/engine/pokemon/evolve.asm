@@ -201,8 +201,8 @@ EvolveAfterBattle_MasterLoop:
 	ld a, [hl]
 	ld [wEvolutionNewSpecies], a
 	ld a, [wCurPartyMon]
-	ld hl, wPartyMonNicknames
-	call GetNickname
+	ld c, a
+	farcall GetPartyMonDisplayName
 	call CopyName1
 	ld hl, EvolvingText
 	call PrintText
@@ -350,7 +350,7 @@ UpdateSpeciesNameIfNotNicknamed:
 	push af
 	ld a, [wBaseDexNo]
 	ld [wNamedObjectIndex], a
-	call GetPokemonName
+	call GetPokemonNameForStorage
 	pop af
 	ld [wCurSpecies], a
 	ld hl, wStringBuffer1
@@ -371,7 +371,7 @@ UpdateSpeciesNameIfNotNicknamed:
 	push hl
 	ld a, [wCurSpecies]
 	ld [wNamedObjectIndex], a
-	call GetPokemonName
+	call GetPokemonNameForStorage
 	ld hl, wStringBuffer1
 	pop de
 	ld bc, MON_NAME_LENGTH

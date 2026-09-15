@@ -111,32 +111,41 @@ GetNthString::
 
 GetBasePokemonName::
 GetPokemonName::
-; Get Pokemon name for wNamedObjectIndex.
+; Get the display species name for wNamedObjectIndex.
 
+	ld a, [wEngPKMNNameMark]
+	cp 1
+	jr nz, GetPokemonNameCHS
+
+GetPokemonNameForStorage::
+; Get the canonical default nickname for wNamedObjectIndex.
+; Mode 0 stores Chinese names. Modes 1 and 2 store English names.
+	ld a, [wEngPKMNNameMark]
+	and a
+	jr z, GetPokemonNameCHS
+
+GetPokemonNameENG::
+	push hl
+	ld hl, PokemonNamesENG
+	jr GetPokemonNameFromTable
+
+GetPokemonNameCHS::
+	push hl
+	ld hl, PokemonNames
+
+GetPokemonNameFromTable::
+	; hl: first entry of the selected species-name table.
+	; wNamedObjectIndex: species.
 	ldh a, [hROMBank]
 	push af
-	push hl
 	ld a, BANK(PokemonNames)
 	rst Bankswitch
 
 ; Each name is ten characters
-	ld a, [wEngPKMNNameMark]
-	cp 1
-	jr nz, .CHS
-.ENG
 	ld a, [wNamedObjectIndex]
 	dec a
-	ld hl, PokemonNamesENG
 	ld e, a
 	ld d, 0
-	jr .end
-.CHS
-	ld a, [wNamedObjectIndex]
-	dec a
-	ld hl, PokemonNames
-	ld e, a
-	ld d, 0
-.end
 rept MON_NAME_LENGTH - 1
 	add hl, de
 endr
@@ -150,8 +159,8 @@ endr
 	ld [hl], "@"
 	pop de
 
-	pop hl
 	pop af
+	pop hl
 	rst Bankswitch
 	ret
 

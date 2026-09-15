@@ -100,9 +100,9 @@ PlacePartyNicknames:
 	push bc
 	push hl
 	push hl
-	ld hl, wPartyMonNicknames
 	ld a, b
-	call GetNickname
+	ld c, a
+	farcall GetPartyMonDisplayName
 	lb bc, 15, 1
 	farcall FixStrLength
 	pop hl
@@ -825,8 +825,8 @@ YouHaveNoPKMNString:
 
 PrintPartyMenuActionText:
 	ld a, [wCurPartyMon]
-	ld hl, wPartyMonNicknames
-	call GetNickname
+	ld c, a
+	farcall GetPartyMonDisplayName
 	ld a, [wPartyMenuActionText]
 	and $f
 	ld hl, .MenuActionTexts

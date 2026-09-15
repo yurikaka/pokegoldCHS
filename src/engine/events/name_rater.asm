@@ -57,7 +57,9 @@ _NameRater:
 
 .samename
 	push hl
-	call GetCurNickname
+	ld a, [wCurPartyMon]
+	ld c, a
+	farcall GetPartyMonDisplayName
 	ld hl, NameRaterNamedText
 	call PrintText
 	pop hl
