@@ -14,7 +14,9 @@ _NameRater:
 	cp EGG
 	jr z, .egg
 ; ... or a Pokemon you got from a trade.
-	call GetCurNickname
+	ld a, [wCurPartyMon]
+	ld c, a
+	farcall GetPartyMonDisplayName
 	call CheckIfMonIsYourOT
 	jr c, .traded
 ; This name is good, but we can do better.  How about it?
