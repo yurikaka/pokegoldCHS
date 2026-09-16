@@ -424,6 +424,8 @@ SaveOptions:
 
 	ld a, [wEngPKMNNameMark]
 	ld [sENGMark], a
+	ld a, $e2
+	ld [sENGMarkMagic], a
 
 	jp CloseSRAM
 
@@ -628,12 +630,34 @@ TryLoadSaveData:
 	ld a, BANK(sPlayerData)
 	call OpenSRAM
 
+	ld a, [sENGMarkMagic]
+	cp $e2
+	jr nz, .load_backup_name_mode
 	ld a, [sENGMark]
 	cp 3
-	jr c, .CHS
-	xor a
-.CHS
+	jr nc, .load_backup_name_mode
 	ld [wEngPKMNNameMark], a
+	jr .copy_primary_time
+
+.load_backup_name_mode
+	call CloseSRAM
+	ld a, BANK(sBackupENGMark)
+	call OpenSRAM
+	ld a, [sBackupENGMarkMagic]
+	cp $e2
+	jr nz, .invalid_primary_name_mode
+	ld a, [sBackupENGMark]
+	cp 3
+	jr c, .store_primary_name_mode
+.invalid_primary_name_mode
+	xor a
+.store_primary_name_mode
+	ld [wEngPKMNNameMark], a
+	call CloseSRAM
+	ld a, BANK(sPlayerData)
+	call OpenSRAM
+
+.copy_primary_time
 
 	ld hl, sPlayerData + wStartDay - wPlayerData
 	ld de, wStartDay

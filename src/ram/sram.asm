@@ -108,11 +108,19 @@ sIMELine_u109::
 sTmpSpace::
 	ds 4
 
-sENGMark:: db
 ; sWindowStack::
 ; 	ds $800 - 1
 ; sWindowStackBottom::
 ; 	ds 1
+
+
+; The primary save is in SRAM bank 1.  Keep the name-mode marker at an
+; address that is unused in both bank 0 and bank 1; in particular, do not put
+; it in the bank-1 Hall of Fame or backup-save ranges.
+SECTION "Primary Name Mode", SRAM[$bf40], BANK[0]
+
+sENGMark:: db
+sENGMarkMagic:: db
 
 
 SECTION "Save", SRAM
