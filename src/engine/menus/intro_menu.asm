@@ -54,7 +54,13 @@ NewGame:
 .skip_version
 	xor a
 	ld [wDebugFlags], a
+	; wEngPKMNNameMark is in the WRAM range cleared by ResetWRAM.
+	; Keep the language selected on the title screen for this new game.
+	ld a, [wEngPKMNNameMark]
+	push af
 	call ResetWRAM
+	pop af
+	ld [wEngPKMNNameMark], a
 	call ClearTilemapEtc
 	call OakSpeech
 	call InitializeWorld

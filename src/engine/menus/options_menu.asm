@@ -132,8 +132,8 @@ DisplayCHSENGLabel:
 .ENGText
 	db $00,$01,$02,$01,$03,$04,$6f,$06,$07,-1
 .MixedText
-	; "中英文": Chinese display, English stored default names.
-	db $00,$01,$02,$01,$03,$04,$6f,$05,$06,$07,-1
+	; "中英": Chinese display, English stored default names.
+	db $00,$01,$02,$01,$03,$04,$6f,$05,$06,-1
 .PKMN
 	db $08,$09,$0A,-1
 
