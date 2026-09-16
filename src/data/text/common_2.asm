@@ -469,7 +469,7 @@ _BreedAskNicknameText::
 
 _LeftWithDayCareLadyText::
 	text "It's @"
-	text_ram wBreedMon2Nickname
+	text_ram wStringBuffer1
 	text_start
 	line "that was left with"
 	cont "the DAY-CARE LADY."
@@ -477,7 +477,7 @@ _LeftWithDayCareLadyText::
 
 _LeftWithDayCareManText::
 	text "It's @"
-	text_ram wBreedMon1Nickname
+	text_ram wStringBuffer1
 	text_start
 	line "that was left with"
 	cont "the DAY-CARE MAN."

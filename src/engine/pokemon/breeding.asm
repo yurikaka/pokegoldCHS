@@ -852,6 +852,10 @@ Hatch_ShellFragmentLoop:
 	ret
 
 DayCareMon1:
+	ld a, [wBreedMon1Species]
+	ld b, a
+	ld de, wBreedMon1Nickname
+	farcall GetMonDisplayName
 	ld hl, LeftWithDayCareManText
 	call PrintText
 	ld a, [wBreedMon1Species]
@@ -869,6 +873,10 @@ DayCareMon1:
 	jp PrintText
 
 DayCareMon2:
+	ld a, [wBreedMon2Species]
+	ld b, a
+	ld de, wBreedMon2Nickname
+	farcall GetMonDisplayName
 	ld hl, LeftWithDayCareLadyText
 	call PrintText
 	ld a, [wBreedMon2Species]
